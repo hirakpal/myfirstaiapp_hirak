@@ -8,7 +8,7 @@ tweet_template = "Give me {number} tweets on {topic}"
 
 st.header(":bird: AI Tweet Generator")
 
-st.subheader(":heart: Made with Build Fast with AI")
+st.subheader(":heart: Made by Hirak")
 
 topic = st.text_input("Topic")
 
