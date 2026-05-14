@@ -1,5 +1,8 @@
 from google import genai
 import streamlit as st
+import anthropic
+
+
 
 # Prompt template
 inventor_template = "Who invented the programming language {language}? Give a brief, factual answer including the inventor's name, the year it was created, and one interesting fact about its origin."
@@ -13,11 +16,11 @@ if st.button("Find Inventor"):
     if language.strip() == "":
         st.warning("Please enter a programming language name.")
     else:
-        client = genai.Client(api_key=st.secrets['GOOGLE_API_KEY'])
+        client = anthropic.Anthropic(api_key=st.secrets['ANTHROPIC_API_KEY'])  # reads ANTHROPIC_API_KEY env var
         prompt = inventor_template.format(language=language)
         response = client.models.generate_content(
-            model="gemini-3.1-flash-lite-preview",
-            contents=prompt
+        model="claude-sonnet-4-6",max_tokens=1024,
+        contents=prompt
         )
 
         final_text = ""
