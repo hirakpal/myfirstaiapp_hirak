@@ -1,32 +1,42 @@
-from google import genai
 import streamlit as st
 import anthropic
 
-
-
 # Prompt template
-inventor_template = "Who invented the programming language {language}? Give a brief, factual answer including the inventor's name, the year it was created, and one interesting fact about its origin."
+inventor_template = (
+    "Who invented the programming language {language}? "
+    "Give a brief, factual answer including the inventor's name, "
+    "the year it was created, and one interesting fact about its origin."
+)
 
 st.header("💻 Programming Language Inventor Finder")
 st.subheader("❤️ Made by Hirak")
 
-language = st.text_input("Enter a Programming Language", placeholder="e.g. Python, Java, Rust...")
+language = st.text_input(
+    "Enter a Programming Language",
+    placeholder="e.g. Python, Java, Rust..."
+)
 
 if st.button("Find Inventor"):
     if language.strip() == "":
         st.warning("Please enter a programming language name.")
     else:
-        client = anthropic.Anthropic(api_key=st.secrets['ANTHROPIC_API_KEY'])  # reads ANTHROPIC_API_KEY env var
-        prompt = inventor_template.format(language=language)
-        response = client.models.generate_content(
-        model="claude-sonnet-4-6",max_tokens=1024,
-        contents=prompt
+        client = anthropic.Anthropic(api_key=st.secrets["ANTHROPIC_API_KEY"])
+        prompt = inventor_template.format(language=language.strip())
+
+        response = client.messages.create(
+            model="claude-3-5-sonnet-latest",
+            max_tokens=300,
+            temperature=0.2,
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
         )
 
+        # response.content is a list of content blocks; join text blocks safely
         final_text = ""
-        if response.candidates and response.candidates[0].content.parts:
-            for part in response.candidates[0].content.parts:
-                if hasattr(part, 'text') and part.text:
-                    final_text += part.text
+        for block in response.content:
+            if getattr(block, "type", None) == "text":
+                final_text += block.text
 
         st.write(final_text)
+        
