@@ -24,7 +24,7 @@ if st.button("Find Inventor"):
         prompt = inventor_template.format(language=language.strip())
 
         response = client.messages.create(
-            model="claude-3-5-sonnet-latest",
+            model="claude-opus-4-7",
             max_tokens=300,
             temperature=0.2,
             messages=[
