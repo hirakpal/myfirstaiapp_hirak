@@ -26,7 +26,6 @@ if st.button("Find Inventor"):
         response = client.messages.create(
             model="claude-opus-4-7",
             max_tokens=300,
-            temperature=0.2,
             messages=[
                 {"role": "user", "content": prompt}
             ],
